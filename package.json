@@ -1,0 +1,28 @@
+{
+  "name": "react-headless-hooks",
+  "version": "1.0.0",
+  "description": "a collection of headless hooks",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rm -rf dist",
+    "build": "npm run clean && tsc && cp package.json README.md ./dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SimonGlancy/react-headless-hooks.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SimonGlancy/react-headless-hooks/issues"
+  },
+  "homepage": "https://github.com/SimonGlancy/react-headless-hooks#readme",
+  "devDependencies": {
+    "@types/react": "^18.0.14",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^4.7.4"
+  }
+}
