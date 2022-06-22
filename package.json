@@ -1,12 +1,13 @@
 {
   "name": "react-headless-hooks",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "a collection of headless hooks",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "clean": "rm -rf dist",
-    "build": "npm run clean && tsc && cp package.json README.md ./dist"
+    "build": "npm run clean && tsc && cp package.json README.md ./dist",
+    "test-cov": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -20,9 +21,25 @@
   },
   "homepage": "https://github.com/SimonGlancy/react-headless-hooks#readme",
   "devDependencies": {
+    "@babel/core": "^7.18.5",
+    "@babel/preset-env": "^7.18.2",
+    "@babel/preset-react": "^7.17.12",
+    "@babel/preset-typescript": "^7.17.12",
+    "@testing-library/react-hooks": "^8.0.1",
+    "@types/jest": "^28.1.2",
+    "@types/lodash": "^4.14.182",
     "@types/react": "^18.0.14",
+    "babel-jest": "^28.1.1",
+    "jest": "^28.1.1",
+    "prettier": "^2.6.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "typescript": "^4.7.4"
+    "ts-node": "^10.8.1",
+    "typescript": "^4.7.4",
+    "jest-environment-jsdom": "^28.1.1",
+    "ts-jest": "^28.0.5"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
   }
 }
