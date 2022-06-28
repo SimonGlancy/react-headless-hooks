@@ -56,3 +56,9 @@ export type {
   FilterValue,
   RangeType,
 } from './useFilter';
+
+export { default as useStepper } from './useStepper';
+export type { UseStepperProps, UseStepperReturn } from './useStepper';
+
+export { default as usePagination, paginateData } from './usePagination';
+export type { UsePaginationReturn, UsePaginationProps } from './usePagination';

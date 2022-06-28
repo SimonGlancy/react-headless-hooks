@@ -113,7 +113,7 @@ it is possible to disable this functionality if it is deemed to be too memory in
 withAutoSelect: false
 ```
 
-If you want to retrieve the selectedData programmatically say on a the hook returns a function selectData which returns the data in the same format as selectedData.
+If you want to retrieve the selectedData programmatically say on a button press the hook returns a function selectData which returns the data in the same format as selectedData.
 
 ### Input props
 
