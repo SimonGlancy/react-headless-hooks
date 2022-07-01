@@ -42,7 +42,7 @@ _this hook is used internally to maintain the selected by index value in the use
 Hook allows user to select items from a list, providing utilities to help implement visualising whether an item is selected and to return the relevant data that is selected.
 
 ```
-import { useSelected, SelectTypeEnum } from 'ract-headless-hooks'
+import { useSelected, SelectTypeEnum } from 'react-headless-hooks'
 
 --------
 
@@ -142,3 +142,55 @@ If you want to retrieve the selectedData programmatically say on a button press 
 | selectCount     | `number`                                      | number of selected items                                                                             |
 | allSelected     | `boolean`                                     | are all items selected                                                                               |
 | objectPaths     | `ObjectPath<DataType>[];`                     | an array of all the possible paths of the data type see useObjectPaths                               |
+
+## useStepper
+
+A hook that returns the current step (1 indexed) in a multistep process.
+
+```
+const { step, next, previous, canGoForwards, canGoBackwards, goTo } = useStepper({ steps: 3 })
+```
+
+### Input props
+
+| name        | type     | required? | description                                         |
+| ----------- | -------- | --------- | --------------------------------------------------- |
+| steps       | `number` | yes       | total number of steps                               |
+| initialStep | `number` | no        | the step to initialise useStepper on. defaults to 1 |
+
+### Output props
+
+| name               | type         | description                                                                                                                                  |
+| ------------------ | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| step               | `number`     | current step                                                                                                                                 |
+| next               | `() => void` | increment the step by 1                                                                                                                      |
+| previous           | `() => void` | decrement the step by 1                                                                                                                      |
+| goTo               | `() => void` | go to a specific step, within range                                                                                                          |
+| canGoForwards      | `boolean`    | boolean value describing whether step is lower than the total number of steps                                                                |
+| canGoBackwards     | `boolean`    | boolean value describing whether step is higher than 1                                                                                       |
+| percentageComplete | `number`     | value of completed steps represented as a percentage of steps. This relates to (step - 1 ) / steps as the current step is an incomplete step |
+
+## usePagination
+
+A hook that breaks a data array into arrays of a smaller 'pageSize'
+
+```
+const { currentPage, currentPageData, pages, totalPages,  ...useStepperValues } = usePagination({ data, pageSize: 10 })
+```
+
+### Input props
+
+| name        | type         | required? | description                                     |
+| ----------- | ------------ | --------- | ----------------------------------------------- |
+| data        | `DataType[]` | yes       | the raw data to be paginated                    |
+| pageSize    | `number`     | no        | defines the number of items to be in each chunk |
+| initialPage | `number`     | no        | the initial page number that should be returned |
+
+### Output props
+
+| name            | type                         | description                                                                                   |
+| --------------- | ---------------------------- | --------------------------------------------------------------------------------------------- |
+| currentPage     | `number`                     | number of current page                                                                        |
+| currentPageData | `DataType[]`                 | the data for that page                                                                        |
+| pages           | `Record<number, DataType[]>` | an object where the key is the page number and the value is an array of DataType. (1 indexed) |
+| totalPages      | `number`                     | total number of pages                                                                         |
