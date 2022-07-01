@@ -194,3 +194,82 @@ const { currentPage, currentPageData, pages, totalPages,  ...useStepperValues } 
 | currentPageData | `DataType[]`                 | the data for that page                                                                        |
 | pages           | `Record<number, DataType[]>` | an object where the key is the page number and the value is an array of DataType. (1 indexed) |
 | totalPages      | `number`                     | total number of pages                                                                         |
+
+_uses useStepper under the hood so all of those return values are available too, i.e next(), previous()_
+
+## useSorted
+
+A hook for sorting data from an array based on and attribute of the DataType. sortKeys can us dot notation to define a specific attribute within a nested object.
+
+i.e to access the amount within a price object
+
+```
+const item = {
+  price: {
+    amount: 200,
+    currency: GBP
+  }
+}
+```
+
+you could use the dot notation `price.amount`
+
+```
+
+const data = [
+  {
+    id: 'Oreo',
+    name: 'Oreo',
+    number: '199',
+    count: 101,
+    complexKey: '34s',
+    createdAt: new Date().toString(),
+    price: {
+      currency: 'ZAR',
+      amount: '12',
+    },
+  },
+  ...
+]
+
+const { sortedData, direction, sortKey, objectPaths, toggleDirection, toggleSortKey } = useSorted({
+  data,
+  initialSortKey: 'count',
+  sortTypes: {
+    createdAt: 'datetime',
+    name: 'alphanumeric',
+    number: 'numeric'
+  },
+  keyLabels: {
+    createdAt: 'Age'
+  }
+}
+```
+
+### Input props
+
+| name                 | type                              | required?      | description                                                                                                                                                                                       |
+| -------------------- | --------------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | -------------- | --- | ------------------------------------------------------------------------------------------------------------------------- | -------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------- | --------------------------------------- |
+| data                 | `DataType[]`                      | yes            | array of data to be sorted                                                                                                                                                                        |
+| initialSortKey       | `Paths<DataType>`                 | no             | a dot notation path of the data type, describes the attribute to sort on                                                                                                                          |
+| initialSortDirection | `SortDirection`                   | no             | `asc` or `desc` defines which direction the data should be sorted                                                                                                                                 |
+| sortTypes            | `Record<Paths<DataType>, 'basic'  | 'alphanumeric' | 'datetime'                                                                                                                                                                                        | 'numeric' | SortFunction>` | no  | allows for custom sort functions to be used per data type. there are four types that can be specified by strings `'basic' | 'alphanumeric' | 'datetime' | 'numeric'` these will use predetermined sorting logic. it is also possible to pass in a custom function with the same signature as the callback given to the js Array.sort method. i.e ```(a: DataType | DataType[Paths<DataType>], b: DataType | DataType[Paths<DataType>]) => number``` |
+| keyLabels            | `Record<Paths<DataType>, string>` | no             | this is an object with a key of a path of the object and the value of a string, this allows for the key names to be translated or given an alias human readable value. i.e `{ createdAt: 'Age' }` |
+
+_react-headless-hooks exports a utility type Paths which validates whether a dot notation string is a valid path of an object. note that DataType must extend GenericObject which is also exported from the project._
+
+### Output props
+
+| name            | type                                 | description                                                                                                                                                                      |
+| --------------- | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| sortedData      | `DataType[]`                         | sorted data                                                                                                                                                                      |
+| direction       | `asc` or `desc`                      | describes the sort direction                                                                                                                                                     |
+| toggleDirection | `() => void`                         | toggles sort direction between `asc` and `desc`                                                                                                                                  |
+| setDirection    | `(direction: SortDirection) => void` | set the sort direction to a specific value (`asc` or `desc`)                                                                                                                     |
+| objectPaths     | `ObjectPath<DataType>[]`             | all possible paths of the DataType as an object { key, label } where label is the translated value defined in keyLabels.. if no specific value defined it is the same as the key |
+| sortKey         | `Paths<DataType>`                    | the current sort direction                                                                                                                                                       |
+| setSortKey      | `(key: Paths<DataType>) => void`     | set sort key to a specific value                                                                                                                                                 |
+| toggleSortKey   | `(key: Paths<DataType>) => void`     | toggle sort key between a specific value and undefined                                                                                                                           |
+| removeSortKey   | `(key: Paths<DataType>) => void`     | set sort key from a specific value to undefined                                                                                                                                  |
+
+## useFiltered
