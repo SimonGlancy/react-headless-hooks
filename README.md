@@ -396,19 +396,3 @@ keyLabels?: KeyLabels<DataType>;
 | clear            | `() => void`                                                | remove all filters                                                                                                                                                               |
 | setFilters       | `(filters: Filter<DataType>[]) => void`                     | globally set the filtersState                                                                                                                                                    |
 | objectPaths      | `ObjectPath<DataType>[]`                                    | all possible paths of the DataType as an object { key, label } where label is the translated value defined in keyLabels.. if no specific value defined it is the same as the key |
-
-updateFilter: (name: string, update: Partial<Filter<DataType>>) => void;
-export type UseFilterReturn<DataType extends GenericObject> = {
-filteredData: DataType[];
-filtersState: FilterExtended<DataType>[];
-filtersStateObj: FiltersStateObj<DataType>;
-filterIsSelected: (name: string) => boolean;
-addFilter: (filter: Filter<DataType>) => void;
-deleteFilter: (name: string) => void;
-updateFilter: (name: string, update: Partial<Filter<DataType>>) => void;
-getFilter: (name: string) => FilterExtended<DataType>;
-clear: () => void;
-setFilters: (filters: Filter<DataType>[]) => void;
-toggleFilter: (filter: Filter<DataType>) => void;
-objectPaths?: ObjectPath<DataType>[];
-};
