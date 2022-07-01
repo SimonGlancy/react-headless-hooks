@@ -273,3 +273,142 @@ _react-headless-hooks exports a utility type Paths which validates whether a dot
 | removeSortKey   | `(key: Paths<DataType>) => void`     | set sort key from a specific value to undefined                                                                                                                                  |
 
 ## useFiltered
+
+A hook for filtereing data based on an array of filters on multiple attributes of data.
+
+```
+const data = [
+  {
+    id: 'Oreo',
+    name: 'Oreo',
+    number: '199',
+    count: 101,
+    complexKey: '34s',
+    createdAt: new Date().toString(),
+    price: {
+      currency: 'ZAR',
+      amount: '12',
+    },
+  },
+  {
+    id: 'eamon',
+    name: 'Eamon',
+    number: '199',
+    count: 101,
+    complexKey: '34s',
+    createdAt: new Date().toString(),
+    price: {
+      currency: 'GBP',
+      amount: '12',
+    },
+  },
+  ...
+]
+
+const {
+  filteredData,
+  getFilter
+} = useFilter({
+  data,
+  filters: [
+    {
+      name: 'search',
+      type: 'includes',
+      keys: ['name'],
+      value: 'eam',
+    },
+  ],
+})
+
+const searchFilter = getFilter('search')
+
+return <input onChange={searchFilter.setValue} value={searchFilter.value} >
+
+```
+
+the example above would initialy only return data where the name attribute includes the string 'eam', the hook returns some utility functions that allow for the update of the filter state. getFilter takes the name attribute and returns the filter defined by the name property with some additional helper functions.
+
+```
+----- input filter value
+type Filter<DataType extends GenericObject> = {
+  keys: Paths<DataType>[];
+  type: FilterType;
+  value: FilterValue;
+  name: string;
+}
+
+----- output of getFilter value
+type FilterExtended = Filter & {
+    min?: number;
+    max?: number;
+    setValue?: (value: FilterValue) => void;
+    setMin?: (value?: number) => void;
+    setMax?: (value?: number) => void;
+    toggleKey?: (key: Paths<DataType>) => void;
+    setType?: (value: FilterType) => void;
+  }
+```
+
+filters can be of the following types:
+
+```
+enum FilterType {
+  INCLUDES = 'includes',
+  EXCLUDES = 'excludes',
+  MORE_THAN = 'moreThan',
+  LESS_THAN = 'lessThan',
+  MORE_THAN_OR_EQUAL = 'moreThanOrEqual',
+  LESS_THAN_OR_EQUAL = 'lessThanOrEqual',
+  EQUAL = 'equal',
+  WITHIN_RANGE = 'withinRange',
+  OUTSIDE_RANGE = 'outsideRange',
+}
+```
+
+the value of a filter is either `number`, `string` or `[number,number]`. The tuple value is used for types `withinRange` and `outsideRange`. For range filters the filter will return a `min` and `max` value as well as setMin and setMax functions.
+
+### Input props
+
+| name      | type                              | required? | description                                                                                                                                                                                       |
+| --------- | --------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| data      | `DataType[]`                      | yes       | the raw data to be filtered                                                                                                                                                                       |
+| filters   | `Filter<DataType>[]`              | yes       | an array of filters, data will be filtered in order filter appears in array. each filter can be applied to multiple paths of an object                                                            |
+| keyLabels | `Record<Paths<DataType>, string>` | no        | this is an object with a key of a path of the object and the value of a string, this allows for the key names to be translated or given an alias human readable value. i.e `{ createdAt: 'Age' }` |
+
+export type UseFilterProps<DataType extends GenericObject> = {
+data: DataType[];
+filters: Filter<DataType>[];
+keyLabels?: KeyLabels<DataType>;
+};
+
+### Output props
+
+| name             | type                                                        | description                                                                                                                                                                      |
+| ---------------- | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| filteredData     | `DataType[]`                                                | the data returned by the filter constraints                                                                                                                                      |
+| filtersState     | `FilterExtended<DataType>[]`                                | an array of filters extended to include setter methods described above                                                                                                           |
+| filtersStateObj  | `FiltersStateObj<DataType>`                                 | a normalisation of the filtersState keyed off the filter name                                                                                                                    |
+| getFilter        | `(name: string) => FilterExtended<DataType>`                | a function which returns the extended filter relating to the name property                                                                                                       |
+| filterIsSelected | `(name: string) => boolean`                                 | a function which returns a boolean value to describe whether a filter with that name is in the flters state                                                                      |
+| addFilter        | `(filter: Filter<DataType>) => void`                        | programatically add a filter to the filterState                                                                                                                                  |
+| deleteFilter     | `(name: string) => void;`                                   | delete a filter from the filter state based on the name                                                                                                                          |
+| updateFilter     | `(name: string, update: Partial<Filter<DataType>>) => void` | update a filter at the global level                                                                                                                                              |
+| clear            | `() => void`                                                | remove all filters                                                                                                                                                               |
+| setFilters       | `(filters: Filter<DataType>[]) => void`                     | globally set the filtersState                                                                                                                                                    |
+| objectPaths      | `ObjectPath<DataType>[]`                                    | all possible paths of the DataType as an object { key, label } where label is the translated value defined in keyLabels.. if no specific value defined it is the same as the key |
+
+updateFilter: (name: string, update: Partial<Filter<DataType>>) => void;
+export type UseFilterReturn<DataType extends GenericObject> = {
+filteredData: DataType[];
+filtersState: FilterExtended<DataType>[];
+filtersStateObj: FiltersStateObj<DataType>;
+filterIsSelected: (name: string) => boolean;
+addFilter: (filter: Filter<DataType>) => void;
+deleteFilter: (name: string) => void;
+updateFilter: (name: string, update: Partial<Filter<DataType>>) => void;
+getFilter: (name: string) => FilterExtended<DataType>;
+clear: () => void;
+setFilters: (filters: Filter<DataType>[]) => void;
+toggleFilter: (filter: Filter<DataType>) => void;
+objectPaths?: ObjectPath<DataType>[];
+};
